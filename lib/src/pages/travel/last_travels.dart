@@ -35,6 +35,7 @@ class _LastTravelsState extends State<LastTravels> {
   @override
   void initState() {
     super.initState();
+
     getData();
   }
 
@@ -55,7 +56,10 @@ class _LastTravelsState extends State<LastTravels> {
                 children: <Widget>[
                   GoogleMap(
                     mapType: MapType.hybrid,
-                    initialCameraPosition: ltLong(),
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(45.521563, -122.677433),
+                      zoom: 11,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -74,9 +78,5 @@ class _LastTravelsState extends State<LastTravels> {
         },
       ),
     );
-  }
-
-  ltLong() {
-
   }
 }
