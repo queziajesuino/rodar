@@ -1,9 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:rodar/src/domain/travel.dart';
+import 'package:rodar/src/domain/travel_service.dart';
 
 class LastTravels extends StatefulWidget {
   static String route = '/lasttravel';
@@ -20,23 +18,11 @@ class _LastTravelsState extends State<LastTravels> {
 
   _LastTravelsState(this.parceiro);
 
-  Map data;
-  List userData;
-
-  Future getData() async {
-    http.Response response = await http.get(
-        "http://52.55.172.202/rodar/app/listOperacao.php?id=" + this.parceiro);
-    data = json.decode(response.body);
-    setState(() {
-      userData = data["operacoes"];
-    });
-  }
+  GoogleMapController mapController;
 
   @override
   void initState() {
     super.initState();
-
-    getData();
   }
 
   @override
@@ -46,37 +32,80 @@ class _LastTravelsState extends State<LastTravels> {
         title: Text("HISTÓRICO"),
         //backgroundColor: Colors.green,
       ),
-      body: ListView.builder(
-        itemCount: userData == null ? 0 : userData.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
+      body: _body(),
+    );
+  }
+
+  _body() {
+    return Container(
+      padding: EdgeInsets.all(12),
+      child: FutureBuilder<List<Travel>>(
+        future: TravelService.getTravels(this.parceiro),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _listView(snapshot.data);
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Sem dados..",
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 26,
+                    fontStyle: FontStyle.normal),
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  _listView(List<Travel> travels) {
+    return ListView.builder(
+      itemCount: travels == null ? 0 : travels.length,
+      itemBuilder: (BuildContext context, int index) {
+        final travel = travels[index];
+        return Container(
+          height: 280,
+          child: Card(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: <Widget>[
-                  GoogleMap(
-                    mapType: MapType.hybrid,
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(45.521563, -122.677433),
-                      zoom: 11,
-                    ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      "${userData[index]["codigo"]} ${userData[index]["id_passageiro"]}",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  )
+                    child: Text(travel.endereco_destino),
+                  ),
                 ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
+  }
+
+  List<Marker> _getMarkers(Travel travel) {
+    return [
+      Marker(
+        markerId: MarkerId("1"),
+        position: travel.latlng(),
+        infoWindow:
+        InfoWindow(title: "Ferrari FF", snippet: "Fábrica da Ferrari"),
+        onTap: () {
+          print("> ${travel.endereco_destino}");
+        },
+      )
+    ];
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      mapController = controller;
+    });
   }
 }
