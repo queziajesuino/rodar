@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rodar/src/domain/travel.dart';
 
 import 'package:rodar/src/domain/user.dart';
 import 'package:http/http.dart' as http;
@@ -117,7 +116,7 @@ class _LastTravelsState extends State<LastTravels> {
   }
 
   void _onClickDetails(BuildContext context,   travel) {
-    print(travel);
+   // print(travel);
     var route = new MaterialPageRoute(
         builder: (context) => new DetailTravel(travel));
     Navigator.push(context,route);

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rodar/src/domain/travel_service.dart';
 import 'package:rodar/src/ui/drawer-list.dart';
 import 'package:rodar/src/ui/flushbar.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'travel/add_travel.dart';
+import 'travel/detail_travel.dart';
 import 'travel/last_travels.dart';
 import 'travel/next_travels.dart';
 
@@ -19,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String parceiro;
+  Map data;
   TextEditingController _tCodTravel = new TextEditingController();
 
   _HomePageState(this.parceiro);
@@ -37,6 +40,17 @@ class _HomePageState extends State<HomePage> {
     fontWeight: FontWeight.w300,
   );
 
+  Future getData() async {
+
+    http.Response response = await http.get(
+        "http://52.55.172.202/rodar/app/listOperacao.php?codigo=" +
+            widget.parceiro);
+    data = json.decode(response.body);
+    //print(data);
+    setState(() {
+      data= data["operacoes"];
+    });
+  }
   //icon builder
   Widget iconBuilder() {
     return new Image.asset(
@@ -50,10 +64,9 @@ class _HomePageState extends State<HomePage> {
     final response = await TravelService.add(code, this.parceiro);
 
     if (response.isOk()) {
-      Flushbar(
-        message: response.message,
-        duration: Duration(seconds: 3),
-      )..show(context);
+      var route = new MaterialPageRoute(
+          builder: (context) => new DetailTravel(data));
+      Navigator.push(context,route);
     } else {
       Flushbar(
         message: response.message,
@@ -65,6 +78,7 @@ class _HomePageState extends State<HomePage> {
   void validaButton(String type) {
     setState(() {
       if (type == 'Start') {
+
         _onClickISave(context);
       } else if (type == 'Historico') {
         lastTravels();

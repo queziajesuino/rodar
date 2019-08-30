@@ -20,11 +20,6 @@ class _DetailTravelState extends State<DetailTravel> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
   Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _cameraPosition = CameraPosition(
-    target: LatLng(-20.4810437, -54.7756201),
-    zoom: 17.0,
-  );
-
   @override
   void initState() {
     //_mapController.mar();
@@ -47,7 +42,10 @@ class _DetailTravelState extends State<DetailTravel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(padding: EdgeInsets.only(left: 20)),
-            Text(travel["codigo"]+" - "+travel["status"], style: TextStyle(fontSize: 30,)),
+            Text(travel["codigo"] + " - " + travel["status"],
+                style: TextStyle(
+                  fontSize: 30,
+                )),
             Container(padding: EdgeInsets.only(right: 20)),
           ],
         ),
@@ -64,7 +62,11 @@ class _DetailTravelState extends State<DetailTravel> {
           GoogleMap(
             //   polylines: Set<Polyline>.of(polylines.values),
             mapType: MapType.normal,
-            initialCameraPosition: _cameraPosition,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(double.parse(travel["latitude"]),
+                  double.parse(travel["longitude"])),
+              zoom: 17.0,
+            ),
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               //_initCameraPosition();
@@ -129,9 +131,8 @@ class _DetailTravelState extends State<DetailTravel> {
     );
   }
 
-  void _onClickFinalizar(BuildContext context, travel)async {
-
-    final response = await TravelService.add(code, this.parceiro);
+  void _onClickFinalizar(BuildContext context, travel) async {
+    final response = await TravelService.finalize(travel["id"]);
 
     if (response.isOk()) {
       Flushbar(
@@ -185,7 +186,6 @@ class _FunctionalButtonState extends State<FunctionalButton> {
     );
   }
 }
-
 
 class PriceWidget extends StatefulWidget {
   final String price;
@@ -244,7 +244,7 @@ class GoButton extends StatefulWidget {
 
 class _GoButtonState extends State<GoButton> {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -252,11 +252,11 @@ class _GoButtonState extends State<GoButton> {
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.red,width: 10),
+              border: Border.all(color: Colors.red, width: 10),
               shape: BoxShape.circle),
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white,width: 2),
+              border: Border.all(color: Colors.white, width: 2),
               shape: BoxShape.circle,
             ),
             child: RawMaterialButton(
@@ -278,10 +278,4 @@ class _GoButtonState extends State<GoButton> {
       ],
     );
   }
-
-
 }
-
-
-
-
