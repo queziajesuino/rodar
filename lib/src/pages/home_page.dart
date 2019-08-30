@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rodar/src/domain/travel_service.dart';
 import 'package:rodar/src/ui/drawer-list.dart';
+import 'package:rodar/src/ui/flushbar.dart';
 
 import 'travel/add_travel.dart';
 import 'travel/last_travels.dart';
@@ -17,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String parceiro;
+  TextEditingController _tCodTravel = new TextEditingController();
 
   _HomePageState(this.parceiro);
 
@@ -41,10 +44,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _onClickISave(BuildContext context) async {
+    final code = _tCodTravel.text;
+
+    final response = await TravelService.add(code, this.parceiro);
+
+    if (response.isOk()) {
+      Flushbar(
+        message: response.message,
+        duration: Duration(seconds: 3),
+      )..show(context);
+    } else {
+      Flushbar(
+        message: response.message,
+        duration: Duration(seconds: 3),
+      )..show(context);
+    }
+  }
+
   void validaButton(String type) {
     setState(() {
-      if (type == 'Adicionar') {
-        addTravel();
+      if (type == 'Start') {
+        _onClickISave(context);
       } else if (type == 'Historico') {
         lastTravels();
       } else if (type == 'Voos') {
@@ -166,13 +187,7 @@ class _HomePageState extends State<HomePage> {
         title: new Text('Home'),
       ),
       drawer: DrawerList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          addTravel();
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.teal,
-      ),
+
       body: new Container(
         padding: new EdgeInsets.all(20),
         margin: EdgeInsets.only(top: 70),
@@ -181,8 +196,17 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               iconBuilder(),
               //usernameTextBuilder(),
-              buttonBuilder(
-                  'ADICIONAR CORRIDA', Colors.indigo.shade400, 'Adicionar'),
+
+              new TextField(
+                keyboardType: TextInputType.numberWithOptions(),
+                controller: _tCodTravel,
+                decoration: new InputDecoration(
+
+                    hintText: "Código da Corrida",
+                  ),
+              ),
+              buttonBuilder('ENVIAR CORRIDA', Colors.indigo.shade500, 'Start'),
+
               buttonBuilder(
                   'HISTÓRICO DE CORRIDAS', Colors.indigo.shade500, 'Historico'),
               //  buttonBuilder('PRÓXIMOS VÔOS', Colors.indigo.shade600, 'Voos'),
