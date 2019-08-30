@@ -36,10 +36,8 @@ class _HomePageState extends State<HomePage> {
 
   //icon builder
   Widget iconBuilder() {
-    return new Icon(
-      Icons.airport_shuttle,
-      color: Colors.indigo,
-      size: 150.0,
+    return new Image.asset(
+      "images/vemrodar.png",
     );
   }
 
@@ -176,17 +174,18 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.teal,
       ),
       body: new Container(
-        padding: new EdgeInsets.all(10.0),
+        padding: new EdgeInsets.all(20),
+        margin: EdgeInsets.only(top: 70),
         child: new Center(
           child: new Column(
             children: <Widget>[
               iconBuilder(),
-              usernameTextBuilder(),
+              //usernameTextBuilder(),
               buttonBuilder(
                   'ADICIONAR CORRIDA', Colors.indigo.shade400, 'Adicionar'),
               buttonBuilder(
                   'HISTÓRICO DE CORRIDAS', Colors.indigo.shade500, 'Historico'),
-              buttonBuilder('PRÓXIMOS VÔOS', Colors.indigo.shade600, 'Voos'),
+              //  buttonBuilder('PRÓXIMOS VÔOS', Colors.indigo.shade600, 'Voos'),
             ],
           ),
         ),

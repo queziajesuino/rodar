@@ -17,7 +17,10 @@ class DrawerList extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final user = snapshot.data;
-                    return Text(user.nome);
+                    return Text(
+                      user.nome,
+                      textAlign: TextAlign.center,
+                    );
                   }
                   return Text("");
                 },
@@ -27,7 +30,7 @@ class DrawerList extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final user = snapshot.data;
-                    return Text(user.email);
+                    return Text(user.email,textAlign: TextAlign.center);
                   }
                   return Text("");
                 },
@@ -38,8 +41,8 @@ class DrawerList extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.star),
-              title: Text("Favoritos"),
+              leading: Icon(Icons.people),
+              title: Text("Meus Dados"),
               subtitle: Text("mais informações..."),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {

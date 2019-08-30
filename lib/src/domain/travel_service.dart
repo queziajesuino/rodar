@@ -17,18 +17,15 @@ class TravelService {
   }
 
   static Future<List<Travel>> getTravels(String id) async {
-    final url = "http://52.55.172.202/rodar/app/listOperacao.php?id=" + id;
-    print("> get: $url");
+    Map data;
+    List travels;
 
-    final response = await http.get(url);
+    http.Response response = await http
+        .get("http://52.55.172.202/rodar/app/listOperacao.php?id=" + id);
+    data = json.decode(response.body);
 
-//    print("< : ${response.body}");
-
-    final mapTravel = json.decode(response.body).cast<Map<String, dynamic>>();
-
-    final travels = mapTravel.map<Travel>((json) => Travel.fromJson(json))
-        .toList();
-
+    travels = data["operacoes"];
+//print(travels);
     return travels;
   }
 }

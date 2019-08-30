@@ -36,6 +36,6 @@ class User {
   }
 
   static clear() {
-   // Prefs.setString("user.prefs", "");
+    // Prefs.setString("user.prefs", "");
   }
 }
