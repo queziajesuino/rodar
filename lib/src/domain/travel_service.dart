@@ -16,6 +16,17 @@ class TravelService {
     return r;
   }
 
+  static Future<ResponseTravel> finalize(String id) async {
+    var url = 'http://52.55.172.202/rodar/app/finalizarOperacao.php';
+    final response =
+    await http.post(url, body: {'id': id});
+    final s = response.body;
+    print(s);
+
+    final r = ResponseTravel.fromJson(json.decode(s));
+    return r;
+  }
+
   static Future<List<Travel>> getTravels(String id) async {
     Map data;
     List travels;
