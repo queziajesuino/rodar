@@ -10,9 +10,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="rodar"
         android:icon="@mipmap/ic_launcher">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAHJeKSBdE-atHSp1BrET_3L74YBeJ82cs" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDPaFRwkTfLGUgDovW6ZrldT9e77mYR7sU"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
