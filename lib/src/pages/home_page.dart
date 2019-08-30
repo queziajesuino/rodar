@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
 
     if (response.isOk()) {
       var route = new MaterialPageRoute(
-          builder: (context) => new DetailTravel(data));
+          builder: (context) => new LastTravels(this.parceiro));
       Navigator.push(context,route);
     } else {
       Flushbar(

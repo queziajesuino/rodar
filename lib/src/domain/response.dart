@@ -15,6 +15,7 @@ class ResponseUser {
   }
 }
 
+
 class ResponseTravel {
   final String code;
   final String message;

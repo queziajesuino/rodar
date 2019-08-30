@@ -10,8 +10,7 @@ class TravelService {
     final response =
         await http.post(url, body: {'codigo': code, 'id_parceiro': parceiro});
     final s = response.body;
-    print(s);
-
+   // print(s);
     final r = ResponseTravel.fromJson(json.decode(s));
     return r;
   }
