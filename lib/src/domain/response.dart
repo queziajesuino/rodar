@@ -13,6 +13,9 @@ class ResponseUser {
   bool isOk() {
     return code == "success";
   }
+  bool isError() {
+    return code == "error";
+  }
 }
 
 
@@ -29,5 +32,8 @@ class ResponseTravel {
 
   bool isOk() {
     return code == "success";
+  }
+  bool isError() {
+    return code == "error";
   }
 }

@@ -22,8 +22,11 @@ class TravelService {
     final s = response.body;
     print(s);
 
+
     final r = ResponseTravel.fromJson(json.decode(s));
     return r;
+
+
   }
 
   static Future<List<Travel>> getTravels(String id) async {

@@ -60,10 +60,12 @@ class _LastTravelsState extends State<LastTravels> {
     return Container(
       padding: EdgeInsets.all(12),
       child: ListView.builder(
+
         itemCount: travels == null ? 0 : travels.length,
         itemBuilder: (BuildContext cntx, int index) {
           final travel = travels[index];
           return Container(
+
             child: InkWell(
               onTap: () {
                 _onClickDetails(context, travel);
@@ -100,7 +102,7 @@ class _LastTravelsState extends State<LastTravels> {
                         FlatButton(
                           child: const Text('DETALHES'),
                           onPressed: () {
-                            _onClickDetails(context,travel);
+                            _onClickDetails(context, travel);
                           },
                         ),
                       ],
@@ -115,10 +117,10 @@ class _LastTravelsState extends State<LastTravels> {
     );
   }
 
-  void _onClickDetails(BuildContext context,   travel) {
-   // print(travel);
-    var route = new MaterialPageRoute(
-        builder: (context) => new DetailTravel(travel));
-    Navigator.push(context,route);
+  void _onClickDetails(BuildContext context, travel) {
+    // print(travel);
+    var route =
+        new MaterialPageRoute(builder: (context) => new DetailTravel(travel));
+    Navigator.push(context, route);
   }
 }

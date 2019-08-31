@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
 
       body: new Container(
         padding: new EdgeInsets.all(20),
-        margin: EdgeInsets.only(top: 70),
+        margin: EdgeInsets.only(top: 20),
         child: new Center(
           child: new Column(
             children: <Widget>[
@@ -219,10 +219,10 @@ class _HomePageState extends State<HomePage> {
                     hintText: "Código da Corrida",
                   ),
               ),
-              buttonBuilder('ENVIAR CORRIDA', Colors.indigo.shade500, 'Start'),
+              buttonBuilder('INICIAR OPERAÇÃO', Colors.indigo.shade500, 'Start'),
 
               buttonBuilder(
-                  'HISTÓRICO DE CORRIDAS', Colors.indigo.shade500, 'Historico'),
+                  'HISTÓRICO DE OPERAÇÕES', Colors.indigo.shade500, 'Historico'),
               //  buttonBuilder('PRÓXIMOS VÔOS', Colors.indigo.shade600, 'Voos'),
             ],
           ),

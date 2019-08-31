@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rodar/src/domain/travel.dart';
 import 'package:rodar/src/domain/travel_service.dart';
 import 'package:rodar/src/ui/flushbar.dart';
+
+import 'last_travels.dart';
 
 class DetailTravel extends StatefulWidget {
   final Map travel;
@@ -38,17 +38,25 @@ class _DetailTravelState extends State<DetailTravel> {
                 color: Colors.grey, blurRadius: 11, offset: Offset(3.0, 4.0))
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(padding: EdgeInsets.only(left: 20)),
-            Text(travel["codigo"] + " - " + travel["status"],
-                style: TextStyle(
-                  fontSize: 30,
-                )),
-            Container(padding: EdgeInsets.only(right: 20)),
-          ],
-        ),
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+
+          Text(travel["codigo"] + " - " + travel["status"],
+              style: TextStyle(
+                fontSize: 30,
+              )),
+
+          Text(travel["endereco_destino"],
+
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                              ),),
+          Container(padding: EdgeInsets.only(top: 10))
+        ],
+      ),
+
       ),
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
@@ -67,36 +75,11 @@ class _DetailTravelState extends State<DetailTravel> {
                   double.parse(travel["longitude"])),
               zoom: 17.0,
             ),
+            markers: Set.of(_getMarkers()),
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               //_initCameraPosition();
             },
-          ),
-          Positioned(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: EdgeInsets.only(top: 30),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      width: 50,
-                      height: 50,
-                    ),
-                    PriceWidget(
-                      price: travel["valor_corrida"],
-                      onPressed: () {},
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
           Positioned(
             child: Container(
@@ -112,7 +95,7 @@ class _DetailTravelState extends State<DetailTravel> {
                       height: 50,
                     ),
                     GoButton(
-                      title: "STOP",
+                      title: "Finalizar",
                       onPressed: () {
                         _onClickFinalizar(context, travel);
                       },
@@ -133,18 +116,30 @@ class _DetailTravelState extends State<DetailTravel> {
 
   void _onClickFinalizar(BuildContext context, travel) async {
     final response = await TravelService.finalize(travel["id"]);
+//print(travel["id_parceiro"]);
 
     if (response.isOk()) {
-      Flushbar(
-        message: response.message,
-        duration: Duration(seconds: 3),
-      )..show(context);
-    } else {
-      Flushbar(
-        message: response.message,
-        duration: Duration(seconds: 3),
-      )..show(context);
+          var route = new MaterialPageRoute(
+          builder: (BuildContext context) => new LastTravels(travel["id_parceiro"]));
+      Navigator.of(context).push(route);
+
+    } if (response.isError())  {
+      Dialog(
+        child: Text( response.message,
+      ),
+              );
     }
+  }
+
+  List<Marker> _getMarkers() {
+    return [
+      Marker(
+        markerId: MarkerId("1"),
+        position: LatLng(double.parse(travel["latitude"]),
+            double.parse(travel["longitude"])),
+        infoWindow: InfoWindow(title: travel["codigo"],snippet: travel["endereco_destino"] )
+      )
+    ];
   }
 }
 
@@ -271,7 +266,7 @@ class _GoButtonState extends State<GoButton> {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 24))),
+                          fontSize: 13))),
             ),
           ),
         ),
