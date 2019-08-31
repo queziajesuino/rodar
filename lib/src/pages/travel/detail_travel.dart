@@ -82,6 +82,32 @@ class _DetailTravelState extends State<DetailTravel> {
             },
           ),
           Positioned(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                margin: EdgeInsets.only(top: 30),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                      width: 50,
+                      height: 50,
+                    ),
+                    PriceWidget(
+                      price: travel["valor_parceiro"],
+                      onPressed: () {},
+                    ),
+                    Container(
+                      width: 50,
+                      height: 50,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
             child: Container(
               margin: EdgeInsets.only(bottom: 20),
               child: Align(
