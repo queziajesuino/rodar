@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
       appBar: new AppBar(
         title: new Text('Home'),
       ),
-      drawer: DrawerList(),
+      drawer: DrawerList(this.parceiro),
 
       body: new Container(
         padding: new EdgeInsets.all(20),

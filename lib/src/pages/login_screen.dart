@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> with Validation {
     if (response.isOk()) {
       setState(() {
         final parceiro = User(
-            "Joao Silva", user, "joaosilva@gmail.com", response.id_parceiro);
+          response.nome , user, response.email, response.id_parceiro);
         parceiro.save();
         var route = new MaterialPageRoute(
             builder: (BuildContext context) => HomePage(response.id_parceiro));

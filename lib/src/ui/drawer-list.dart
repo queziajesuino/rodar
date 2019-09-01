@@ -3,6 +3,10 @@ import 'package:rodar/src/domain/user.dart';
 import 'package:rodar/src/pages/login_screen.dart';
 
 class DrawerList extends StatelessWidget {
+  final String parceiro;
+
+  DrawerList(this.parceiro);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,7 +44,7 @@ class DrawerList extends StatelessWidget {
                     "https://cdn.iconscout.com/icon/free/png-256/avatar-372-456324.png"),
               ),
             ),
-            ListTile(
+           /* ListTile(
               leading: Icon(Icons.people),
               title: Text("Meus Dados"),
               subtitle: Text("mais informações..."),
@@ -59,7 +63,7 @@ class DrawerList extends StatelessWidget {
                 print("Item 1");
                 Navigator.pop(context);
               },
-            ),
+            ),*/
             ListTile(
               onTap: () {
                 _logout(context);
