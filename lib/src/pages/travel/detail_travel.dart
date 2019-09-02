@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rodar/src/domain/travel_service.dart';
-import 'package:rodar/src/ui/flushbar.dart';
+
 
 import 'last_travels.dart';
 
@@ -39,23 +39,23 @@ class _DetailTravelState extends State<DetailTravel> {
           ],
         ),
         child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
 
-          Text(travel["codigo"] + " - " + travel["status"],
-              style: TextStyle(
-                fontSize: 30,
-              )),
+            Text(travel["codigo"] + " - " + travel["status"],
+                style: TextStyle(
+                  fontSize: 30,
+                )),
 
-          Text(travel["endereco_destino"],
+            Text(travel["endereco_destino"],
 
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
-                              ),),
-          Container(padding: EdgeInsets.only(top: 10))
-        ],
-      ),
+              ),),
+            Container(padding: EdgeInsets.only(top: 10))
+          ],
+        ),
 
       ),
       resizeToAvoidBottomInset: false,
@@ -71,8 +71,8 @@ class _DetailTravelState extends State<DetailTravel> {
             //   polylines: Set<Polyline>.of(polylines.values),
             mapType: MapType.normal,
             initialCameraPosition: CameraPosition(
-              target: LatLng(double.parse(travel["latitude"]),
-                  double.parse(travel["longitude"])),
+              target: LatLng(-20.4644999,-54.632477/*double.parse(travel["latitude"]),
+                  double.parse(travel["longitude"])*/),
               zoom: 17.0,
             ),
             markers: Set.of(_getMarkers()),
@@ -81,7 +81,7 @@ class _DetailTravelState extends State<DetailTravel> {
               //_initCameraPosition();
             },
           ),
-     /*     Positioned(
+          /*     Positioned(
             child: Align(
               alignment: Alignment.topCenter,
               child: Container(
@@ -123,7 +123,7 @@ class _DetailTravelState extends State<DetailTravel> {
                     GoButton(
                       title: "Finalizar",
                       onPressed: () {
-                        _onClickFinalizar(context, travel);
+                         _onClickFinalizar(context, travel);
                       },
                     ),
                     Container(
@@ -145,15 +145,15 @@ class _DetailTravelState extends State<DetailTravel> {
 //print(travel["id_parceiro"]);
 
     if (response.isOk()) {
-          var route = new MaterialPageRoute(
+      var route = new MaterialPageRoute(
           builder: (BuildContext context) => new LastTravels(travel["id_parceiro"]));
       Navigator.of(context).push(route);
 
     } if (response.isError())  {
       Dialog(
         child: Text( response.message,
-      ),
-              );
+        ),
+      );
     }
   }
 

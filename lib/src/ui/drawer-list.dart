@@ -3,7 +3,7 @@ import 'package:rodar/src/domain/user.dart';
 import 'package:rodar/src/pages/login_screen.dart';
 
 class DrawerList extends StatelessWidget {
-  final String parceiro;
+ final String parceiro;
 
   DrawerList(this.parceiro);
 

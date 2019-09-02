@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rodar/src/domain/travel_service.dart';
+import 'package:rodar/src/domain/user.dart';
 import 'package:rodar/src/ui/drawer-list.dart';
 import 'package:rodar/src/ui/flushbar.dart';
 import 'package:http/http.dart' as http;
@@ -20,11 +21,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String parceiro;
+  String parceiro;
+ _HomePageState(this.parceiro);
   Map data;
   TextEditingController _tCodTravel = new TextEditingController();
 
-  _HomePageState(this.parceiro);
+
 
   var usernameStyle = new TextStyle(
     color: Colors.black,
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
 
     http.Response response = await http.get(
         "http://52.55.172.202/rodar/app/listOperacao.php?codigo=" +
-            widget.parceiro);
+            this.parceiro);
     data = json.decode(response.body);
     //print(data);
     setState(() {
@@ -114,6 +116,7 @@ class _HomePageState extends State<HomePage> {
 
   //username builder
   Widget buttonBuilder(String text, Color color, String type) {
+
     return Container(
       margin: const EdgeInsets.only(top: 10.0),
       child: new Row(
@@ -196,6 +199,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+   // print(user);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Home'),
