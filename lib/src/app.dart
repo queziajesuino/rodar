@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rodar/src/pages/travel/Maps.dart';
+import 'package:rodar/src/pages/travel/detail_travel.dart';
 
 import './pages/login_screen.dart';
 
@@ -21,7 +23,7 @@ class App extends StatelessWidget {
         errorColor: Colors.cyan,
       ),
       routes: screenRoutes,
-      home: new LoginScreen(),
+      home: new MapsTravel(),
       //home: new SecondScreen(response:null,),
     );
   }

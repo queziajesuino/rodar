@@ -81,7 +81,7 @@ class _DetailTravelState extends State<DetailTravel> {
               //_initCameraPosition();
             },
           ),
-          Positioned(
+     /*     Positioned(
             child: Align(
               alignment: Alignment.topCenter,
               child: Container(
@@ -95,7 +95,7 @@ class _DetailTravelState extends State<DetailTravel> {
                       height: 50,
                     ),
                     PriceWidget(
-                      price: travel["valor_parceiro"],
+                      price: ,
                       onPressed: () {},
                     ),
                     Container(
@@ -106,7 +106,7 @@ class _DetailTravelState extends State<DetailTravel> {
                 ),
               ),
             ),
-          ),
+          ),*/
           Positioned(
             child: Container(
               margin: EdgeInsets.only(bottom: 20),
