@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_webservice/directions.dart';
-import 'package:rodar/src/pages/travel/mapsview.dart';
+//import 'package:google_maps_webservice/directions.dart';
+//import 'package:rodar/src/pages/travel/mapsview.dart';
 
 import './src/app.dart';
 
 void main() => runApp(new App());
 
-/*
-Future<void> main() async {
+/*Future<void> main() async {
   DirectionsResponse res =
   await directions.directionsWithAddress('Campo Grande, Terenos','Terenos,Campo Grande');
 
