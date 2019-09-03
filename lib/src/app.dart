@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rodar/src/pages/home_page.dart';
+import 'package:rodar/src/pages/travel/detail_travel.dart';
 
 import './pages/login_screen.dart';
 

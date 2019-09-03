@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rodar/src/domain/login_service.dart';
 import 'package:rodar/src/domain/user.dart';
 import 'package:rodar/src/ui/flushbar.dart';
-
 import '../mixins/validation.dart';
 import 'home_page.dart';
 
@@ -56,76 +55,85 @@ class _LoginScreenState extends State<LoginScreen> with Validation {
     });
   }
 
+  Widget imageBuilder() {
+    return new Image.asset("images/vemrodar.png");
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
-      appBar: new AppBar(
-        title: new Text('RodarAPP'),
-      ),
+
       //listview created to not give overflow error when the keyboard appears
-      body: new ListView(
-        padding: new EdgeInsets.all(40.0),
-        children: <Widget>[
-          new Builder(
-            builder: (BuildContext context) {
-              return new GestureDetector(
-                onTap: () {
-                  //node created to request focus from the screen
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                },
-                //manages the entire form
-                child: new Form(
-                  key: formKey,
-                  child: new Column(
-                    children: <Widget>[
-                      //email form
-                      formBuilder(TextInputType.text, _tLogin, validateUsername,
-                          'Usuário', false),
-                      //password form
-                      formBuilder(
-                        TextInputType.text,
-                        _tPassword,
-                        validatePassword,
-                        'Password',
-                        //controlled by toggleObscure function
-                        obscurePassword,
-                        suffixIcon: new IconButton(
-                          //calls toggleObscure function to enable or disable obscureText parameter
-                          onPressed: toggleObscure,
-                          icon: Icon(
-                              //changes the icon
-                              obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility),
-                          tooltip: obscurePassword ? 'Show' : 'Hide',
-                        ),
-                        //referencing password focus
-                        focusNode: passwordFocusNode,
-                      ),
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          new RaisedButton(
-                            child: new Text('Login'),
-                            onPressed: () {
-                              //method to validate forms
-                              if (formKey.currentState.validate()) {
-                                //method to save forms
-                                formKey.currentState.save();
-                                _onClickLogin(context);
-                              }
-                            },
+      body: Container(
+        margin: new EdgeInsets.only(top: 150),
+        child: new ListView(
+          padding: new EdgeInsets.all(40.0),
+          children: <Widget>[
+            imageBuilder(),
+            new Builder(
+              builder: (BuildContext context) {
+                return new GestureDetector(
+                  onTap: () {
+                    //node created to request focus from the screen
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                  },
+                  //manages the entire form
+                  child: new Form(
+                    key: formKey,
+                    child: new Column(
+                      children: <Widget>[
+                        //email form
+                        formBuilder(TextInputType.text, _tLogin,
+                            validateUsername, 'Usuário', false),
+                        //password form
+                        formBuilder(
+                          TextInputType.text,
+                          _tPassword,
+                          validatePassword,
+                          'Password',
+                          //controlled by toggleObscure function
+                          obscurePassword,
+                          suffixIcon: new IconButton(
+                            //calls toggleObscure function to enable or disable obscureText parameter
+                            onPressed: toggleObscure,
+                            icon: Icon(
+                                //changes the icon
+                                obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                            tooltip: obscurePassword ? 'Show' : 'Hide',
                           ),
-                        ],
-                      ),
-                    ],
+                          //referencing password focus
+                          focusNode: passwordFocusNode,
+                        ),
+                        new Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            new RaisedButton(
+                              child: new Text('Login'),
+                              onPressed: () {
+                                //method to validate forms
+                                if (formKey.currentState.validate()) {
+                                  //method to save forms
+                                  formKey.currentState.save();
+                                  _onClickLogin(context);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+            new Image.asset(
+              "images/logo.png",
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -138,8 +146,8 @@ class _LoginScreenState extends State<LoginScreen> with Validation {
 
     if (response.isOk()) {
       setState(() {
-        final parceiro = User(
-            "Joao Silva", user, "joaosilva@gmail.com", response.id_parceiro);
+        final parceiro =
+            User(response.nome, user, response.email, response.id_parceiro);
         parceiro.save();
         var route = new MaterialPageRoute(
             builder: (BuildContext context) => HomePage(response.id_parceiro));

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rodar/src/domain/travel_service.dart';
+import 'package:rodar/src/domain/user.dart';
 import 'package:rodar/src/ui/drawer-list.dart';
-
+import 'package:rodar/src/ui/flushbar.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'travel/add_travel.dart';
+import 'travel/detail_travel.dart';
 import 'travel/last_travels.dart';
 import 'travel/next_travels.dart';
 
@@ -16,9 +21,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String parceiro;
+  String parceiro;
+ _HomePageState(this.parceiro);
+  Map data;
+  TextEditingController _tCodTravel = new TextEditingController();
 
-  _HomePageState(this.parceiro);
+
 
   var usernameStyle = new TextStyle(
     color: Colors.black,
@@ -34,19 +42,46 @@ class _HomePageState extends State<HomePage> {
     fontWeight: FontWeight.w300,
   );
 
+  Future getData() async {
+
+    http.Response response = await http.get(
+        "http://52.55.172.202/rodar/app/listOperacao.php?codigo=" +
+            this.parceiro);
+    data = json.decode(response.body);
+    //print(data);
+    setState(() {
+      data= data["operacoes"];
+    });
+  }
   //icon builder
   Widget iconBuilder() {
-    return new Icon(
-      Icons.airport_shuttle,
-      color: Colors.indigo,
-      size: 150.0,
+    return new Image.asset(
+      "images/vemrodar.png",
     );
+  }
+
+  void _onClickISave(BuildContext context) async {
+    final code = _tCodTravel.text;
+
+    final response = await TravelService.add(code, this.parceiro);
+
+    if (response.isOk()) {
+      var route = new MaterialPageRoute(
+          builder: (context) => new LastTravels(this.parceiro));
+      Navigator.push(context,route);
+    } else {
+      Flushbar(
+        message: response.message,
+        duration: Duration(seconds: 3),
+      )..show(context);
+    }
   }
 
   void validaButton(String type) {
     setState(() {
-      if (type == 'Adicionar') {
-        addTravel();
+      if (type == 'Start') {
+
+        _onClickISave(context);
       } else if (type == 'Historico') {
         lastTravels();
       } else if (type == 'Voos') {
@@ -81,6 +116,7 @@ class _HomePageState extends State<HomePage> {
 
   //username builder
   Widget buttonBuilder(String text, Color color, String type) {
+
     return Container(
       margin: const EdgeInsets.only(top: 10.0),
       child: new Row(
@@ -163,30 +199,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+   // print(user);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Home'),
       ),
-      drawer: DrawerList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          addTravel();
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.teal,
-      ),
+      drawer: DrawerList(this.parceiro),
+
       body: new Container(
-        padding: new EdgeInsets.all(10.0),
+        padding: new EdgeInsets.all(20),
+        margin: EdgeInsets.only(top: 20),
         child: new Center(
           child: new Column(
             children: <Widget>[
               iconBuilder(),
-              usernameTextBuilder(),
+              //usernameTextBuilder(),
+
+              new TextField(
+                keyboardType: TextInputType.numberWithOptions(),
+                controller: _tCodTravel,
+                decoration: new InputDecoration(
+
+                    hintText: "Código da Corrida",
+                  ),
+              ),
+              buttonBuilder('INICIAR OPERAÇÃO', Colors.indigo.shade500, 'Start'),
+
               buttonBuilder(
-                  'ADICIONAR CORRIDA', Colors.indigo.shade400, 'Adicionar'),
-              buttonBuilder(
-                  'HISTÓRICO DE CORRIDAS', Colors.indigo.shade500, 'Historico'),
-              buttonBuilder('PRÓXIMOS VÔOS', Colors.indigo.shade600, 'Voos'),
+                  'HISTÓRICO DE OPERAÇÕES', Colors.indigo.shade500, 'Historico'),
+              //  buttonBuilder('PRÓXIMOS VÔOS', Colors.indigo.shade600, 'Voos'),
             ],
           ),
         ),

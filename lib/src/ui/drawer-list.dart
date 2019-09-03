@@ -3,6 +3,10 @@ import 'package:rodar/src/domain/user.dart';
 import 'package:rodar/src/pages/login_screen.dart';
 
 class DrawerList extends StatelessWidget {
+ final String parceiro;
+
+  DrawerList(this.parceiro);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -17,7 +21,10 @@ class DrawerList extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final user = snapshot.data;
-                    return Text(user.nome);
+                    return Text(
+                      user.nome,
+                      textAlign: TextAlign.center,
+                    );
                   }
                   return Text("");
                 },
@@ -27,7 +34,7 @@ class DrawerList extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final user = snapshot.data;
-                    return Text(user.email);
+                    return Text(user.email,textAlign: TextAlign.center);
                   }
                   return Text("");
                 },
@@ -37,9 +44,9 @@ class DrawerList extends StatelessWidget {
                     "https://cdn.iconscout.com/icon/free/png-256/avatar-372-456324.png"),
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.star),
-              title: Text("Favoritos"),
+           /* ListTile(
+              leading: Icon(Icons.people),
+              title: Text("Meus Dados"),
               subtitle: Text("mais informações..."),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
@@ -56,7 +63,7 @@ class DrawerList extends StatelessWidget {
                 print("Item 1");
                 Navigator.pop(context);
               },
-            ),
+            ),*/
             ListTile(
               onTap: () {
                 _logout(context);
