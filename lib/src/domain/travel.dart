@@ -5,60 +5,54 @@ import 'package:rodar/src/ui/prefs.dart';
 
 class Travel {
   final String codigo;
-  String id_passageiro;
-  String id_parceiro;
-  String valor_uber;
-  String valor_corrida;
-  String valor_parceiro;
-  String tipo_venda;
-  String endereco_destino;
-  String latitude;
-  String longitude;
-  String latLong;
+  final String id_passageiro;
+  final String id_parceiro;
+  final String valor_uber;
+  final String valor_corrida;
+  final String valor_parceiro;
+  final String tipo_venda;
+  final String endereco_destino;
+  final String latitude;
+  final String longitude;
 
-  Travel({
-    this.codigo,
-    this.id_passageiro,
-    this.id_parceiro,
-    this.valor_uber,
-    this.valor_corrida,
-    this.valor_parceiro,
-    this.tipo_venda,
-    this.endereco_destino,
-    this.latitude,
-    this.longitude,
-    this.latLong
-  });
+  Travel(
+      this.codigo,
+      this.id_passageiro,
+      this.id_parceiro,
+      this.valor_uber,
+      this.valor_corrida,
+      this.valor_parceiro,
+      this.tipo_venda,
+      this.endereco_destino,
+      this.latitude,
+      this.longitude);
 
-  factory Travel.fromJson(Map<String, dynamic> json) {
-    return Travel(
-      codigo: json['codigo'] as String,
-      id_passageiro: json['id_passageiro']as String,
-      id_parceiro: json['id_parceiro']as String,
-      valor_uber: json['valor_uber']as String,
-      valor_corrida: json['valor_corrida']as String,
-      valor_parceiro: json['valor_parceiro']as String,
-      tipo_venda: json['tipo_venda']as String,
-      endereco_destino: json['endereco_destino'] as String,
-      latitude: json['latitude'] as String,
-      longitude: json['longitude'] as String,
+  Travel.fromJson(Map<String, dynamic> json)
+      : this.codigo = json['codigo'],
+        this.id_passageiro = json['id_passageiro'],
+        this.id_parceiro = json['id_parceiro'],
+        this.valor_uber = json['valor_uber'],
+        this.valor_corrida = json['valor_corrida'],
+        this.valor_parceiro = json['valor_parceiro'],
+        this.tipo_venda = json['tipo_venda'],
+        this.endereco_destino = json['endereco_destino'],
+        this.latitude = json['latitude'],
+        this.longitude = json['longitude'];
 
-    );
-  }
-
-  get latlng => LatLng(
-      latitude == null || latitude.isEmpty ? 0.0 : double.parse(latitude),
-      longitude == null || longitude.isEmpty ? 0.0 : double.parse(longitude));
-
-  Map toMap() {
-    Map<String, dynamic> map = {
+  void save() {
+    final map = {
+      "codigo": codigo,
+      "id_passageiro": id_passageiro,
+      "id_parceiro": id_parceiro,
+      "valor_uber": valor_uber,
+      "valor_corrida": valor_corrida,
+      "valor_parceiro": valor_parceiro,
+      "tipo_venda": tipo_venda,
+      "endereco_destino": endereco_destino,
       "latitude": latitude,
-      "longitude": longitude,
+      "longitude": longitude
     };
-    if (codigo != null) {
-      map["codigo"] = codigo;
-    }
-    return map;
+    Prefs.setString("travel.prefs", json.encode(map));
   }
 
   static Future<Travel> get() async {
@@ -69,6 +63,4 @@ class Travel {
     final travel = Travel.fromJson(json.decode(s));
     return travel;
   }
-
-
 }

@@ -129,9 +129,7 @@ class _LoginScreenState extends State<LoginScreen> with Validation {
                 );
               },
             ),
-            new Image.asset(
-              "images/logo.png",
-            ),
+
           ],
         ),
       ),

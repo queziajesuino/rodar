@@ -80,7 +80,7 @@ class _LastTravelsState extends State<LastTravels> {
                       size: 50,
                     ),
                     title: Text(
-                      travel["date_created"] + ' - Valor:' + travel["valor_parceiro"],
+                      travel["codigo"],
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 25,
@@ -102,7 +102,7 @@ class _LastTravelsState extends State<LastTravels> {
                         FlatButton(
                           child: const Text('DETALHES'),
                           onPressed: () {
-                           // _onClickDetails(context, travel);
+                           _onClickDetails(context, travel);
                           },
                         ),
                       ],

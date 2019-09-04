@@ -1,10 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rodar/src/domain/travel_service.dart';
-
-
-import 'last_travels.dart';
+import 'package:intl/intl.dart';
 
 class DetailTravel extends StatefulWidget {
   final Map travel;
@@ -14,289 +9,152 @@ class DetailTravel extends StatefulWidget {
   _DetailTravelState createState() => _DetailTravelState();
 }
 
+const kExpandedHeight = 300.0;
+
 class _DetailTravelState extends State<DetailTravel> {
   get travel => widget.travel;
 
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-  Completer<GoogleMapController> _controller = Completer();
-
   @override
   void initState() {
-    //_mapController.mar();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 90,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey, blurRadius: 11, offset: Offset(3.0, 4.0))
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Container(
+        height: 560,
+        child: Stack(
+          alignment: Alignment.topCenter,
           children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 280,
+              decoration: BoxDecoration(
+                color: Colors.indigo,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: Icon(
+                              Icons.keyboard_backspace,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            travel["codigo"],
+                            style: TextStyle(color: Colors.white, fontSize: 28),
+                          )
+                        ],
+                      ),
 
-            Text(travel["codigo"] + " - " + travel["status"],
-                style: TextStyle(
-                  fontSize: 30,
-                )),
-
-            Text(travel["endereco_destino"],
-
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-              ),),
-            Container(padding: EdgeInsets.only(top: 10))
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "R\$" + travel["valor_parceiro"],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 44,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                width: double.infinity,
+                height: 320,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.indigo.shade700,
+                        blurRadius: 11,
+                        offset: Offset(3.0, 4.0))
+                  ],
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: ListTile(
+                        title: Text(
+                            DateFormat.yMMMd().format(DateTime.parse(travel["inicio_corrida"])),
+                            style: TextStyle(fontSize: 20)),
+                        subtitle: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Text(
+                                DateFormat.Hm().format(
+                                      DateTime.parse(travel["inicio_corrida"]),
+                                    ) +" - " +
+                                    DateFormat.Hm().format(
+                                      DateTime.parse(travel["termino_corrida"]),
+                                    ),
+                                style: TextStyle(fontSize: 16))),
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.indigo.shade700,
+                              shape: BoxShape.circle),
+                          child: Icon(
+                            Icons.calendar_today,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: ListTile(
+                        title: Text("Destino", style: TextStyle(fontSize: 20)),
+                        subtitle: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Text(travel["endereco_destino"],
+                                style: TextStyle(fontSize: 16))),
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.indigo.shade700,
+                              shape: BoxShape.circle),
+                          child: Icon(
+                            Icons.pin_drop,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
-
       ),
-      resizeToAvoidBottomInset: false,
-      key: _scaffoldKey,
-      bottomSheet: Container(
-        height: 300,
-        decoration: BoxDecoration(color: Colors.black),
-        child: Column(),
-      ),
-      body: Stack(
-        children: <Widget>[
-          GoogleMap(
-            //   polylines: Set<Polyline>.of(polylines.values),
-            mapType: MapType.normal,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(-20.4644999,-54.632477/*double.parse(travel["latitude"]),
-                  double.parse(travel["longitude"])*/),
-              zoom: 17.0,
-            ),
-            markers: Set.of(_getMarkers()),
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              //_initCameraPosition();
-            },
-          ),
-          /*     Positioned(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: EdgeInsets.only(top: 30),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      width: 50,
-                      height: 50,
-                    ),
-                    PriceWidget(
-                      price: ,
-                      onPressed: () {},
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),*/
-          Positioned(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 20),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      width: 50,
-                      height: 50,
-                    ),
-                    GoButton(
-                      title: "Finalizar",
-                      onPressed: () {
-                         _onClickFinalizar(context, travel);
-                      },
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  void _onClickFinalizar(BuildContext context, travel) async {
-    final response = await TravelService.finalize(travel["id"]);
-//print(travel["id_parceiro"]);
-
-    if (response.isOk()) {
-      var route = new MaterialPageRoute(
-          builder: (BuildContext context) => new LastTravels(travel["id_parceiro"]));
-      Navigator.of(context).push(route);
-
-    } if (response.isError())  {
-      Dialog(
-        child: Text( response.message,
-        ),
-      );
-    }
-  }
-
-  List<Marker> _getMarkers() {
-    return [
-      Marker(
-        markerId: MarkerId("1"),
-        position: LatLng(double.parse(travel["latitude"]),
-            double.parse(travel["longitude"])),
-        infoWindow: InfoWindow(title: travel["codigo"],snippet: travel["endereco_destino"] )
-      )
-    ];
-  }
-}
-
-class FunctionalButton extends StatefulWidget {
-  final String title;
-  final IconData icon;
-  final Function() onPressed;
-
-  const FunctionalButton({Key key, this.title, this.icon, this.onPressed})
-      : super(key: key);
-
-  @override
-  _FunctionalButtonState createState() => _FunctionalButtonState();
-}
-
-class _FunctionalButtonState extends State<FunctionalButton> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        RawMaterialButton(
-          onPressed: widget.onPressed,
-          splashColor: Colors.black,
-          fillColor: Colors.white,
-          elevation: 15.0,
-          shape: CircleBorder(),
-          child: Padding(
-              padding: EdgeInsets.all(14.0),
-              child: Icon(
-                widget.icon,
-                size: 30.0,
-                color: Colors.black,
-              )),
-        ),
-      ],
-    );
-  }
-}
-
-class PriceWidget extends StatefulWidget {
-  final String price;
-  final Function() onPressed;
-
-  const PriceWidget({Key key, this.price, this.onPressed}) : super(key: key);
-
-  @override
-  _PriceWidgetState createState() => _PriceWidgetState();
-}
-
-class _PriceWidgetState extends State<PriceWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      height: 60,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 4),
-        color: Colors.black,
-        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey, blurRadius: 11, offset: Offset(3.0, 4.0))
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text("R\$",
-              style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold)),
-          Text(widget.price,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-}
-
-class GoButton extends StatefulWidget {
-  final String title;
-  final Function() onPressed;
-
-  const GoButton({Key key, this.title, this.onPressed}) : super(key: key);
-
-  @override
-  _GoButtonState createState() => _GoButtonState();
-}
-
-class _GoButtonState extends State<GoButton> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.red, width: 10),
-              shape: BoxShape.circle),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 2),
-              shape: BoxShape.circle,
-            ),
-            child: RawMaterialButton(
-              onPressed: widget.onPressed,
-              splashColor: Colors.black,
-              fillColor: Colors.red,
-              elevation: 15.0,
-              shape: CircleBorder(),
-              child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(widget.title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13))),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

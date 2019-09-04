@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rodar/src/domain/travel.dart';
 import 'package:rodar/src/domain/travel_service.dart';
-import 'package:rodar/src/domain/user.dart';
+import 'package:rodar/src/pages/travel/navigate_travel.dart';
 import 'package:rodar/src/ui/drawer-list.dart';
 import 'package:rodar/src/ui/flushbar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'travel/add_travel.dart';
-import 'travel/detail_travel.dart';
 import 'travel/last_travels.dart';
 import 'travel/next_travels.dart';
 
@@ -49,9 +49,6 @@ class _HomePageState extends State<HomePage> {
             this.parceiro);
     data = json.decode(response.body);
     //print(data);
-    setState(() {
-      data= data["operacoes"];
-    });
   }
   //icon builder
   Widget iconBuilder() {
@@ -63,18 +60,32 @@ class _HomePageState extends State<HomePage> {
   void _onClickISave(BuildContext context) async {
     final code = _tCodTravel.text;
 
-    final response = await TravelService.add(code, this.parceiro);
-
-    if (response.isOk()) {
+   // final response = await TravelService.add(code, this.parceiro);
+    final retorno = await TravelService.get(code);
+    setState((){
+      final travel =
+      Travel(retorno.codigo,
+          retorno.id_passageiro,
+          retorno.id_parceiro,
+          retorno.valor_uber,
+          retorno.valor_corrida,
+          retorno.valor_parceiro,
+          retorno.tipo_venda,
+          retorno.endereco_destino,
+          retorno.latitude,
+          retorno.longitude);
+      travel.save();
+    });
+    //if (response.isOk()) {
       var route = new MaterialPageRoute(
-          builder: (context) => new LastTravels(this.parceiro));
+          builder: (context) => new NavigateTravels(code));
       Navigator.push(context,route);
-    } else {
+    /*} else {
       Flushbar(
         message: response.message,
         duration: Duration(seconds: 3),
       )..show(context);
-    }
+    }*/
   }
 
   void validaButton(String type) {
@@ -84,19 +95,11 @@ class _HomePageState extends State<HomePage> {
         _onClickISave(context);
       } else if (type == 'Historico') {
         lastTravels();
-      } else if (type == 'Voos') {
-        nextTravels();
       }
     });
   }
 
-  void addTravel() {
-    setState(() {
-      var route = new MaterialPageRoute(
-          builder: (BuildContext context) => new AdiTravel(this.parceiro));
-      Navigator.of(context).push(route);
-    });
-  }
+
 
   void lastTravels() {
     setState(() {
@@ -106,13 +109,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void nextTravels() {
-    setState(() {
-      var route = new MaterialPageRoute(
-          builder: (BuildContext context) => new NextTravels());
-      Navigator.of(context).push(route);
-    });
-  }
 
   //username builder
   Widget buttonBuilder(String text, Color color, String type) {

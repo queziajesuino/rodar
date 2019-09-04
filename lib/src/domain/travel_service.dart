@@ -28,6 +28,15 @@ class TravelService {
 
 
   }
+  static Future<ResponseTravelview>  get(String code) async {
+    var url = 'http://52.55.172.202/rodar/app/viewOperacao.php';
+    final response = await http.post(url, body: {'codigo': code});
+    final s = response.body;
+    print(s);
+
+    final retorno = json.decode(s);
+    return retorno;
+  }
 
   static Future<List<Travel>> getTravels(String id) async {
     Map data;
@@ -38,7 +47,7 @@ class TravelService {
     data = json.decode(response.body);
 
     travels = data["operacoes"];
-//print(travels);
+
     return travels;
   }
 }
